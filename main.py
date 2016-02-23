@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 import serial, time, sys, os, threading
-from dronekit import connect, VehicleMode
+#from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
 
 #ground = connect('/dev/ttyUSB1', baud=57600, wait_ready=true)
@@ -10,6 +10,7 @@ apm.baudrate = 57600
 radio = serial.Serial()
 radio.baudrate = 57600
 radio.port = '/dev/ttyAMA0'
+
 #@vehicle.on_message()
 #def listener(self, name, message):
 #    print message
@@ -82,3 +83,15 @@ aTr.start()
 #	g = mav.parse_buffer(radio.read(1))
 #	if (g != None):
 #		print(g)
+
+
+modem = serial.Serial()
+modem.port = '/dev/ttyUSB2' # Check if this changed // software defined
+modem.baudrate = 19200
+
+modem.open()
+modem.flushInput()
+while True:
+	m = modem.read()
+	[d data] = m.split('CAMUA')
+	data
