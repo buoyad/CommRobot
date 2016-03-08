@@ -86,12 +86,12 @@ aTr.start()
 
 
 modem = serial.Serial()
-modem.port = '/dev/ttyUSB2' # Check if this changed // software defined
+modem.port = '/dev/ttyUSB0' # Check if this changed // software defined
 modem.baudrate = 19200
 
 modem.open()
 modem.flushInput()
 while True:
-	m = modem.read()
+	m = modem.readLine()
 	[d data] = m.split('CAMUA')
-	data
+	[src dest data] = data.split(',')
