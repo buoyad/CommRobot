@@ -2,6 +2,7 @@
 import serial, time, sys, os, threading
 #from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
+import WHOI
 
 #ground = connect('/dev/ttyUSB1', baud=57600, wait_ready=true)
 apm = serial.Serial()
@@ -11,9 +12,6 @@ radio = serial.Serial()
 radio.baudrate = 57600
 radio.port = '/dev/ttyAMA0'
 
-#@vehicle.on_message()
-#def listener(self, name, message):
-#    print message
 
 class fifo(object):
     def __init__(self):
@@ -74,24 +72,10 @@ aTr = rfLink(apm, radio, 'APM to Radio', daemon=True)
 rTa.start()
 aTr.start()
 
-#f = fifo()
-#mav = mavlink.MAVLink(f)
 
-#radio.open()
-#radio.flushInput() 
-#while True:
-#	g = mav.parse_buffer(radio.read(1))
-#	if (g != None):
-#		print(g)
-
-
-modem = serial.Serial()
-modem.port = '/dev/ttyUSB0' # Check if this changed // software defined
-modem.baudrate = 19200
-
-modem.open()
-modem.flushInput()
+modem = WHOI.WHOI('/dev/ttyUSB0')
+modem.start()
 while True:
-	m = modem.readLine()
-	[d data] = m.split('CAMUA')
-	[src dest data] = data.split(',')
+	str = modem.receive()
+	print str
+	print len(str)
