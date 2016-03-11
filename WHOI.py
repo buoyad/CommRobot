@@ -7,7 +7,7 @@ class serialRead(threading.Thread):
 	port = None
 	rate = 19200 # Probably
 
-	def __init__(self, port, queue):
+	def __init__(self, port):
 		threading.Thread.__init__(self)
 		self.port = port
 		self.initSerial()
@@ -21,6 +21,7 @@ class serialRead(threading.Thread):
 		self.s.flushOutput()
 
 	def run(self):
+		# Only run AFTER modem is connected and turned on
 		self.initSerial()
 		self.configModem()
 		while True:
@@ -45,7 +46,7 @@ class WHOI(threading.Thread):
 
 	def __init__(self, port):
 		threading.Thread.__init__(self)
-		self.s = serialRead(port, RxQueue)
+		self.s = serialRead(port)
 
 	def run(self):
 		self.s.start()
