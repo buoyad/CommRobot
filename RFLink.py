@@ -1,16 +1,7 @@
 #! /usr/bin/env python
-import serial, time, sys, os, threading
+import serial, threading
 #from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
-import WHOI#, RFLink
-
-#ground = connect('/dev/ttyUSB1', baud=57600, wait_ready=true)
-apm = serial.Serial()
-apm.port = '/dev/tty60'
-apm.baudrate = 57600
-radio = serial.Serial()
-radio.baudrate = 57600
-radio.port = '/dev/ttyAMA0'
 
 
 class fifo(object):
@@ -67,15 +58,3 @@ class rfLink (threading.Thread):
                                 print(g[0].mavlink_version)
 				self.src.write(str(bytearray(self.f.buf)))
 				
-rTa = RFLink(radio, apm, 'Radio to APM')
-aTr = RFLink(apm, radio, 'APM to Radio', daemon=True)
-rTa.start()
-aTr.start()
-
-
-modem = WHOI.WHOI('/dev/ttyUSB0')
-modem.start()
-while True:
-	str = modem.receive()
-	print str
-	print len(str)
