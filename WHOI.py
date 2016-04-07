@@ -127,13 +127,13 @@ class WHOI(threading.Thread):
 																			ret, ch_raw, ret, ret, ret, ret)
 						self.packetQueue.put(mav_pack.pack(mav))
 					elif cmd == '100':
-
+						pass
 					elif cmd == '101':
-
+						pass
 					elif cmd == '110':
-
+						pass
 					elif cmd == '111':
-
+						pass
 	def receive(self):
 		msg = RxQueue.get()
 		return msg

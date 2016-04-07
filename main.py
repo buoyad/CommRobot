@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 import serial, time, sys, os, threading
-#from dronekit import connect, VehicleMode
+from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
 import WHOI#, RFLink
 
-#ground = connect('/dev/ttyUSB1', baud=57600, wait_ready=true)
+ground = connect('tcp:169.254.7.191:5760', wait_ready=True)
 apm = serial.Serial()
 apm.port = '/dev/tty60'
 apm.baudrate = 57600
@@ -22,7 +22,7 @@ class fifo(object):
     def read(self):
         return self.buf.pop(0)
 
-class rfLink (threading.Thread):
+class RFLink (threading.Thread):
 	src = None
 	dest = None
 	name = None
