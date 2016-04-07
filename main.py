@@ -4,10 +4,10 @@ from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
 import WHOI#, RFLink
 
-ground = connect('tcp:169.254.7.191:5760', wait_ready=True)
-apm = serial.Serial()
-apm.port = '/dev/tty60'
-apm.baudrate = 57600
+ground = connect('tcp:169.254.24.153:5762', wait_ready=True)
+#apm = serial.Serial()
+#apm.port = '/dev/tty60'
+#apm.baudrate = 57600
 radio = serial.Serial()
 radio.baudrate = 57600
 radio.port = '/dev/ttyAMA0'
@@ -67,15 +67,15 @@ class RFLink (threading.Thread):
                                 print(g[0].mavlink_version)
 				self.src.write(str(bytearray(self.f.buf)))
 				
-rTa = RFLink(radio, apm, 'Radio to APM')
-aTr = RFLink(apm, radio, 'APM to Radio', daemon=True)
-rTa.start()
-aTr.start()
+#rTa = RFLink(radio, apm, 'Radio to APM')
+#aTr = RFLink(apm, radio, 'APM to Radio', daemon=True)
+#rTa.start()
+#aTr.start()
 
 
-modem = WHOI.WHOI('/dev/ttyUSB0')
-modem.start()
-while True:
-	str = modem.receive()
-	print str
-	print len(str)
+#modem = WHOI.WHOI('/dev/ttyUSB0')
+#modem.start()
+#while True:
+#	str = modem.receive()
+#	print str
+#	print len(str)
