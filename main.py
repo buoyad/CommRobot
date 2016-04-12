@@ -5,6 +5,7 @@ from pymavlink import mavlinkv10 as mavlink
 import WHOI#, RFLink
 
 ground = connect('tcp:169.254.24.153:5762', wait_ready=True)
+vehicle = connect('tcp:127.0.0.1', wait_ready=True)
 #apm = serial.Serial()
 #apm.port = '/dev/tty60'
 #apm.baudrate = 57600

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import serial, time, threading, Queue
 from pymavlink import mavlinkv10 as mavlink
+from dronekit import connect, VehicleMode
 RxQueue = Queue.Queue()
 
 
@@ -81,8 +82,9 @@ class WHOI(threading.Thread):
 	packetQueue = Queue.Queue() # Parsed MAVLINK to be sent to APM
 	ret = 65536 # 2^16, to retain old channel value
 	mav = None
+	vehicle = None
 
-	def __init__(self, port):
+	def __init__(self, port, vehicle):
 		threading.Thread.__init__(self)
 		self.s = serialRead(port)
 		MAVBuffer = fifo()
@@ -92,11 +94,11 @@ class WHOI(threading.Thread):
 
 	def run(self):
 		self.s.start()
-		hBeats = Beats()
-		hBeats.start()
+		#hBeats = Beats()
+		#hBeats.start()
 		while True:
 			if not RxQueue.empty():
-				msg = RxQueue.get()
+				msg = receive()
 				if msg.startswith('$CAMUA'):		# Mini packet received
 					v = msg.split(',')				# Delineate message values
 					data = (v[3].split('*'))[0]		# Strip XOR value off data
