@@ -105,21 +105,23 @@ class WHOI(threading.Thread):
 				print(msg);
 				time.sleep(.05);
 				#self.mavsink.send_mavlink(self.mavsink.message_factory.rc_channel_override_encode(
-				#if msg.startswith('$CAMUA'):		# Mini packet received
-				#	v = msg.split(',')				# Delineate message values
-				#	data = (v[3].split('*'))[0]		# Strip XOR value off data
-				#	data = int(data, 16)			# Cast data as int
-				#	bind = bin(data)				# Convert to binary string
-				#	cmd = bnd[2:5]					# Format "0bXXXXXXXXXXXXX" strip "ob"
-				#	val = bnd[5:]					
-				#	ch_raw = int(val, 2) + 1000		# Convert rest of value to string
+				if msg.startswith('$CAMUA'):		# Mini packet received
+					v = msg.split(',')				# Delineate message values
+					data = (v[3].split('*'))[0]		# Strip XOR value off data
+					data = int(data, 16)			# Cast data as int
+					bnd = bin(data)				# Convert to binary string
+					cmd = bnd[2:5]					# Format "0bXXXXXXXXXXXXX" strip "ob"
+					print('bnd: ' + bnd + ' cmd: ' + cmd)
+					val = bnd[5:]					
+					ch_raw = int(val, 2) + 1000		# Convert rest of value to string
 					# Pack appropriate MAVLINK message, send along.
-				#	if cmd == '000':	# RC Override Channel 1
+					if cmd == '001':	# RC Override Channel 1
 				#		mav_pack = self.mav.MAVLink_rc_channels_override_message(
-				#															100, 100, ch_raw, ret, 
+						print('RC Override 001 received');															100, 100, ch_raw, ret, 
 				#															ret, ret, ret, ret, ret, ret)
 				#		self.packetQueue.put(mav_pack.pack(mav))
-				#	elif cmd == '001':	# RC Override Channel 2
+					elif cmd == '010':	# RC Override Channel 2
+						print('RC Override 010 received')
 				#		mav_pack = self.mav.MAVLink_rc_channels_override_message(
 				#															100, 100, ret, ch_raw, 
 				#															ret, ret, ret, ret, ret, ret)

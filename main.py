@@ -4,15 +4,16 @@ from dronekit import connect, VehicleMode
 from pymavlink import mavlinkv10 as mavlink
 import WHOI#, RFLink
 
-ground = connect('tcp:169.254.24.153:5760', wait_ready=True)
+ground = connect('tcp:169.254.24.153:5763', wait_ready=True)
 #vehicle = connect('tcp:', wait_ready=True)
 #apm = serial.Serial()
 #apm.port = '/dev/tty60'
 #apm.baudrate = 57600
 radio = serial.Serial()
 radio.baudrate = 57600
-radio.port = '/dev/ttyAMA0'
+radio.port = '/dev/ttyUSB0'
 
+#ground.send_mavlink(ground.message_factory.rc_channel_override_encode(0,0,0,0))
 
 class fifo(object):
     def __init__(self):
@@ -74,7 +75,7 @@ class RFLink (threading.Thread):
 #aTr.start()
 
 
-modem = WHOI.WHOI('/dev/ttyUSB0', ground)
+modem = WHOI.WHOI('/dev/ttyUSB1', ground)
 modem.start()
 #while True:
 #	str = modem.receive()
