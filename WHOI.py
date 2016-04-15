@@ -1,6 +1,7 @@
 #! /usr/bin/env python
-import serial, time, threading, Queue
+import serial, time, threading, Queue, math
 from pymavlink import mavlinkv10 as mavlink
+from pymavlink import mavutil
 from dronekit import connect, VehicleMode
 RxQueue = Queue.Queue()
 
@@ -95,6 +96,9 @@ class WHOI(threading.Thread):
 		self.mav.srcComponent = 190
 		self.mavsink = mavsink
 
+	def packCMD(self, xv, yv):
+		return self.mavsink.message_factory.set_position_target_global_int_encode(0, 0, 0, mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT, 0b0000111111000111, 0,0,0, xv,yv,0, 0,0,0,0,0)
+
 	def run(self):
 		self.s.start()
 		#hBeats = Beats()
@@ -106,6 +110,15 @@ class WHOI(threading.Thread):
 				time.sleep(.05);
 				#self.mavsink.send_mavlink(self.mavsink.message_factory.rc_channel_override_encode(
 				if msg.startswith('$CAMUA'):		# Mini packet received
+					theta = self.mavsink.heading*math.pi/180
+					xv = -1*math.sin(theta)
+					yv = -1*math.cos(theta)
+					# FORWARD: (xv, yv)
+					# BACKWARD: (-xv, -yv)
+					# LEFT: (yv, -xv)
+					# RIGHT: (-yv, xv)
+					# msg = self.mavsink.message_factory.set_position_target_global_int_encode(0,0,0,mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT, 0b0000111111000111, 0,0,0, xvelocity,yvelocity,zvelocity, 0,0,0,0,0)
+					# self.mavsink.send_mavlink(msg)
 					v = msg.split(',')				# Delineate message values
 					data = (v[3].split('*'))[0]		# Strip XOR value off data
 					data = int(data, 16)			# Cast data as int
